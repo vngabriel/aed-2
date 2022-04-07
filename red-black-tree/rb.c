@@ -20,13 +20,13 @@ void insert_node(abstract_data data, Node **root) {
 	position = *root;
 	father = NULL;
 
-	 while (position != NULL) {
-			father = position;
-			if (data >= position->data) {
-                position = position->right;
-            } else {
-                position = position->left;
-            }
+    while (position != NULL) {
+        father = position;
+        if (data >= position->data) {
+            position = position->right;
+        } else {
+            position = position->left;
+        }
 	}
 
 	new_node = (Node *) malloc(sizeof(Node));
@@ -52,6 +52,7 @@ void insert_node(abstract_data data, Node **root) {
 
 void fix_insert(Node **root, Node *node) {
 	while (color(node) == RED && color(node->father) == RED) {
+        // case 1
         if (color(uncle(node)) == RED) {
             uncle(node)->color = BLACK;
             node->father->color = BLACK;
@@ -59,7 +60,8 @@ void fix_insert(Node **root, Node *node) {
 			
             node = node->father->father;
             continue;
-        } 
+        }
+        // case 2a
         if (is_left_son(node) && is_left_son(node->father)) {
             single_right_rotation(root, node->father->father);
             node->father->color = BLACK;
@@ -67,6 +69,7 @@ void fix_insert(Node **root, Node *node) {
             
             continue;
         }
+        // case 2b
         if (!is_left_son(node) && !is_left_son(node->father)) {
             single_left_rotation(root, node->father->father);
             node->father->color = BLACK;
@@ -74,6 +77,7 @@ void fix_insert(Node **root, Node *node) {
 
             continue;
         }
+        // case 3a
         if (!is_left_son(node) && is_left_son(node->father)) {
             double_right_rotation(root, node->father->father);
             node->color = BLACK;
@@ -81,6 +85,7 @@ void fix_insert(Node **root, Node *node) {
 
             continue;
         }
+        // case 3b
         if (is_left_son(node) && !is_left_son(node->father)) {
             double_left_rotation(root, node->father->father);
             node->color = BLACK;
@@ -160,11 +165,201 @@ void double_left_rotation(Node **root, Node *pivot) {
 }
 
 void delete_node(abstract_data data, Node **root) {
+    Node *removable_node;
+	removable_node = *root;
 
+	while (removable_node != NULL) {
+		if (data == removable_node->data) {
+            if (removable_node->left != NULL && removable_node->right != NULL) {
+    			removable_node->data = greater(removable_node->left);
+	    		delete_node(removable_node->data, &(removable_node->left));
+
+                break;
+            }
+
+			if (removable_node->left == NULL && removable_node->right != NULL) {
+                Node *right_node = removable_node->right;
+                removable_node->data = right_node->data;
+                removable_node->right = NULL;
+
+                free(right_node);
+
+				break;
+			}
+
+			if (removable_node->left != NULL && removable_node->right == NULL) {
+				Node *left_node = removable_node->left;
+                removable_node->data = left_node->data;
+                removable_node->left = NULL;
+
+                free(left_node);
+
+                break;
+			}
+
+			if (removable_node->left == NULL && removable_node->right == NULL) {				
+				if (is_root(removable_node)) {
+					*root = NULL;
+                    free(removable_node);
+
+					break;
+				}
+
+				if (removable_node->color == RED) {
+					if (is_left_son(removable_node)) {
+					    removable_node->father->left = NULL;
+                    } else {
+						removable_node->father->right = NULL;
+                    }
+                    free(removable_node);
+
+					break;
+
+				} else {
+                    null_node->father = removable_node->father;
+                    if (is_left_son(removable_node)) {
+                        removable_node->father->left = null_node;
+                    } else {
+                        removable_node->father->right = null_node;
+                    }
+                    free(removable_node);
+                    fix_delete(root, null_node);
+
+                    break;
+				}
+			}
+		} else {
+            if (data >= removable_node->data) {
+                removable_node = removable_node->right;
+            } else {
+                removable_node = removable_node->left;
+            }
+        }	
+	}
 }
 
-void fix_delete(Node **root, Node *node) {
+void fix_delete(Node **root, Node *double_black_node) {
+    // case 1
+	if(is_root(double_black_node)) {
+        remove_double_black(root, double_black_node);
 
+		return;
+	}
+
+    // case 2
+	if(color(double_black_node->father) == BLACK && color(brother(double_black_node)) == RED && 
+    color(brother(double_black_node)->right) == BLACK && color(brother(double_black_node)->left) == BLACK) {
+
+        if (is_left_son(double_black_node)) {
+            single_left_rotation(root, double_black_node->father);
+        } else {
+            single_right_rotation(root, double_black_node->father);	
+        }
+        double_black_node->father->father->color = BLACK;
+        double_black_node->father->color = RED;
+        
+        fix_delete(root, double_black_node);
+
+        return;
+	}
+
+    // case 3
+    if (color(double_black_node->father) == BLACK && color(brother(double_black_node)) == BLACK && 
+    color(brother(double_black_node)->right) == BLACK && color(brother(double_black_node)->left) == BLACK) {
+
+        Node *father = double_black_node->father;
+
+        brother(double_black_node)->color = RED;
+        father->color = DOUBLE_BLACK;
+
+        remove_double_black(root, double_black_node);
+        fix_delete(root, father);
+
+        return ;
+    }	
+
+    // case 4
+	if (color(double_black_node->father) == RED && color(brother(double_black_node)) == BLACK && 
+    color(brother(double_black_node)->right) == BLACK && color(brother(double_black_node)->left) == BLACK) {	
+
+        double_black_node->father->color = BLACK;
+        brother(double_black_node)->color = RED;
+        remove_double_black(root, double_black_node);
+
+		return;
+	}
+
+    // case 5a
+	if (color(brother(double_black_node)) == BLACK && color(brother(double_black_node)->right) == BLACK &&
+    color(brother(double_black_node)->left) == RED && !is_left_son(brother(double_black_node))) {	
+
+        single_right_rotation(root, brother(double_black_node));
+        brother(double_black_node)->color = BLACK;
+        brother(double_black_node)->right->color = RED;
+
+        fix_delete(root, double_black_node);
+
+		return;
+	}
+
+    // case 5b
+	if (color(brother(double_black_node)) == BLACK && color(brother(double_black_node)->right) == RED &&
+    color(brother(double_black_node)->left) == BLACK && is_left_son(brother(double_black_node))) {	
+		
+        single_left_rotation(root, brother(double_black_node));
+        brother(double_black_node)->color = BLACK;
+        brother(double_black_node)->left->color = RED;
+
+        fix_delete(root, double_black_node);
+        
+        return;
+	}
+
+	// case 6a
+	if (color(brother(double_black_node)) == BLACK && color(brother(double_black_node)->right) == RED &&
+    !is_left_son(brother(double_black_node))) {
+
+        single_left_rotation(root, double_black_node->father);
+        enum color aux_color = double_black_node->father->father->color;
+        double_black_node->father->father->color = double_black_node->father->color;
+        double_black_node->father->color = aux_color;
+        uncle(double_black_node)->color = BLACK;
+
+        remove_double_black(root, double_black_node);
+
+		return;
+	}
+
+	// case 6b
+	if (color(brother(double_black_node)) == BLACK && color(brother(double_black_node)->left) == RED &&
+    is_left_son(brother(double_black_node))) {
+
+        single_right_rotation(root, double_black_node->father);
+        enum color aux_color = double_black_node->father->father->color;
+        double_black_node->father->father->color = double_black_node->father->color;
+        double_black_node->father->color = aux_color;
+        uncle(double_black_node)->color = BLACK;
+
+        remove_double_black(root, double_black_node);
+
+		return;
+	}
+}
+
+void remove_double_black(Node **root, Node *node) {
+    if (node == null_node) {
+        if (is_root(node)) {
+            *root = NULL;
+        } else {
+            if (is_left_son(node)) {
+                node->father->left = NULL;
+            } else {
+                node->father->right = NULL;
+            }
+        }
+    } else {
+        node->color = BLACK;
+    }
 }
 
 enum color color(Node *node) {

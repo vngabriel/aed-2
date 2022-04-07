@@ -23,7 +23,7 @@ void print_node(Node *node);
 void print_tree(Node *tree);
 
 void fix_insert(Node **root, Node *node);
-void fix_delete(Node **root, Node *node);
+void fix_delete(Node **root, Node *double_black_node);
 
 void single_right_rotation(Node **root, Node *pivot);
 void single_left_rotation(Node **root, Node *pivot);
@@ -35,6 +35,6 @@ bool is_root(Node *node);
 bool is_left_son(Node *node);
 Node * brother(Node *node);
 Node * uncle(Node *node);
-void remove_double_black(Node **tree, Node *node);
+void remove_double_black(Node **root, Node *node);
 
 #endif
