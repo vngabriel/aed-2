@@ -275,7 +275,7 @@ void fix_delete(Node **root, Node *double_black_node) {
         remove_double_black(root, double_black_node);
         fix_delete(root, father);
 
-        return ;
+        return;
     }	
 
     // case 4
