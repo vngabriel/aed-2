@@ -49,6 +49,9 @@ int main(int argc, char *argv[]) {
                 scanf("%d", &value);
                 tree = delete_node(tree, value);
                 break;
+            case 10:
+                printf("%d\n", height(tree));
+                break;
             case 99:
                 exit(0);
                 break;

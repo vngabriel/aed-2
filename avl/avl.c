@@ -337,3 +337,15 @@ void print_tree(Node *tree) {
 	}
     printf(")");
 }
+
+int height(Node *tree) {
+    if (tree == NULL) {
+        return 0;
+    } else {
+        return 1 + max(height(tree->left), height(tree->right));
+    }
+}
+
+int max(int n1, int n2) {
+    return n1 > n2 ? n1 : n2;
+}

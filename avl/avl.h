@@ -21,6 +21,8 @@ Node * double_left_rotation(Node *tree);
 Node * double_right_rotation(Node *tree);
 
 int greater(Node *tree);
+int height(Node *tree);
+int max(int n1, int n2);
 
 void print_node(Node *tree);
 void print_tree(Node *tree);

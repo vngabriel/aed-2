@@ -25,7 +25,9 @@ int main(int argc, char * argv[]) {
                 print_tree(tree);
                 printf("\n");
                 break;
-
+            case 10:
+                printf("%d\n", height(tree));
+                break;
             case 99:
                 exit(0);
 		}

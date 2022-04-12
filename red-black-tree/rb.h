@@ -18,6 +18,8 @@ void insert_node(abstract_data data, Node **root);
 void delete_node(abstract_data data, Node **root);
 
 abstract_data greater(Node *root);
+int height(Node *tree);
+int max(int n1, int n2);
 
 void print_node(Node *node);
 void print_tree(Node *tree);
