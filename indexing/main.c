@@ -14,7 +14,9 @@ int main(int argc, char * argv[]) {
     }
 
 	while (true) {
+        printf("\nChoose an option (1 - add, 2 - search, 3 - indexes (pre-order), 99 - exit): ");
 		scanf("%d", &option);
+        printf("\n");
 
 		switch (option) {
             int valor;
@@ -22,10 +24,11 @@ int main(int argc, char * argv[]) {
                 add_book(&table, read_data());
                 break;
             case 2:
+                printf("Enter the book code: ");
                 scanf("%d", &key);
                 book = search_book(&table, key);
                 if (book != NULL) {
-                    printf("Code: %d\n", book->code);
+                    printf("\nCode: %d\n", book->code);
                     printf("Title: %s\n", book->title);
                     printf("Author: %s\n", book->author);
                     printf("Year: %d\n", book->year);

@@ -23,3 +23,23 @@ TITLE=Livro 10
 AUTHOR=Pessoa 10
 YEAR=2010
 #
+CODE=87
+TITLE=C Completo
+AUTHOR=Tom
+YEAR=1999
+#
+CODE=1
+TITLE=Os elementos
+AUTHOR=Euclides
+YEAR=1
+#
+CODE=669
+TITLE=Programação Competitiva
+AUTHOR=John
+YEAR=2005
+#
+CODE=73
+TITLE=Kotlin para Android
+AUTHOR=Google
+YEAR=2018
+#
