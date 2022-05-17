@@ -85,7 +85,7 @@ public class GraphAdjacencyList {
 
     public void add(char u, char v) {
         adjacencyList[mappingVertices.indexOf(u)].add(mappingVertices.indexOf(v));
-//        adjacencyList[mappingVertices.indexOf(v)].add(mappingVertices.indexOf(u));
+        adjacencyList[mappingVertices.indexOf(v)].add(mappingVertices.indexOf(u));
     }
 
     private void createConnections() {

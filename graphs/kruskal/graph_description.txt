@@ -1,0 +1,24 @@
+9 14
+a
+b
+c
+d
+e
+f
+g
+h
+i
+ab 4
+ah 8
+bh 11
+hi 7
+hg 1
+ig 6
+ic 2
+bc 8
+gf 2
+cf 4
+cd 7
+df 14
+de 9
+fe 10
