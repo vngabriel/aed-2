@@ -4,7 +4,7 @@ import java.util.*;
 
 public class GraphAdjacencyMatrix {
 
-    private class Edge {
+    private static class Edge {
         public char vertex1;
         public char vertex2;
         public int weight;
@@ -26,20 +26,12 @@ public class GraphAdjacencyMatrix {
     private final LinkedList<Edge> edges;
     private final int[][] adjacencyMatrix;
 
-    public GraphAdjacencyMatrix(Character[] vertices, String[] edges) {
-        mappingVertices = new LinkedList<>(List.of(vertices));
-        nVertices = mappingVertices.size();
+    public GraphAdjacencyMatrix(int nVertices) {
+        this.nVertices = nVertices;
+        this.mappingVertices = new LinkedList<>();
         this.edges = new LinkedList<>();
+        this.adjacencyMatrix = new int[nVertices][nVertices];
 
-        for (String e : edges) {
-            char u = e.charAt(0);
-            char v = e.charAt(1);
-            int weight = Integer.parseInt(e.split(" ")[1]);
-
-            this.edges.add(new Edge(u, v, weight));
-        }
-
-        adjacencyMatrix = new int[nVertices][nVertices];
         for (int i = 0; i < nVertices; i++) {
             for (int j = 0; j < nVertices; j++) {
                 if (i == j) {
@@ -49,13 +41,11 @@ public class GraphAdjacencyMatrix {
                 }
             }
         }
-
-        createConnections();
     }
 
     // Kruskal's algorithm to minimum spanning tree
     public void kruskal() {
-        LinkedList<String> mst = new LinkedList<>();
+        List<Edge> mst = new LinkedList<>();
         Set<Set<Character>> verticesSets = new HashSet<>();
 
         for (Character vertex : mappingVertices) {
@@ -70,19 +60,29 @@ public class GraphAdjacencyMatrix {
             if (verticesSets.size() == 1) {
                 break;
             }
-            if (findSet(edge.vertex1, verticesSets) != findSet(edge.vertex2, verticesSets)) {
-                mst.add(edge.toString());
+            if (!findSet(edge.vertex1, verticesSets).equals(findSet(edge.vertex2, verticesSets))) {
+                mst.add(edge);
                 union(edge.vertex1, edge.vertex2, verticesSets);
             }
         }
 
-        System.out.println(mst);
+        System.out.println("Minimum spanning tree: " + mst);
+        System.out.println("Sum of minimum spanning tree weights: " + sumEdges(mst));
+    }
+
+    private int sumEdges(List<Edge> mst) {
+        int sum = 0;
+        for (Edge edge : mst) {
+            sum += edge.weight;
+        }
+
+        return sum;
     }
 
     private void union(char vertex1, char vertex2, Set<Set<Character>> verticesSets) {
         Set<Character> vertex1Set = findSet(vertex1, verticesSets);
         Set<Character> vertex2Set = findSet(vertex2, verticesSets);
-        if (vertex1Set != null && vertex2Set != null) {
+        if (!vertex1Set.isEmpty() && !vertex2Set.isEmpty()) {
             verticesSets.remove(vertex1Set);
             verticesSets.remove(vertex2Set);
             vertex1Set.addAll(vertex2Set);
@@ -97,18 +97,18 @@ public class GraphAdjacencyMatrix {
             }
         }
 
-        return null;
+        return new HashSet<>();
     }
 
-    public void add(char u, char v, int weight) {
+    public void addVertex(char vertex) {
+        mappingVertices.add(vertex);
+    }
+
+    public void addEdge(char u, char v, int weight) {
         adjacencyMatrix[mappingVertices.indexOf(u)][mappingVertices.indexOf(v)] = weight;
         adjacencyMatrix[mappingVertices.indexOf(v)][mappingVertices.indexOf(u)] = weight;
-    }
 
-    private void createConnections() {
-        for (Edge edge : edges) {
-            add(edge.vertex1, edge.vertex2, edge.weight);
-        }
+        edges.add(new Edge(u, v, weight));
     }
 
     @Override
