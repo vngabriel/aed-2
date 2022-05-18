@@ -1,12 +1,10 @@
 package dfs_adjacency_list;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GraphAdjacencyList {
 
-    public enum Color {
+    private enum Color {
         WHITE,
         BLACK,
         GRAY
@@ -15,8 +13,7 @@ public class GraphAdjacencyList {
     // attributes to represent the graph
     private final LinkedList<Character> mappingVertices;
     private final int nVertices;
-    private final LinkedList<String> edges;
-    private final LinkedList<Integer>[] adjacencyList;
+    private final Map<Character, List<Character>> adjacencyList;
 
     // attributes to deep-first-search
     private Color[] colors;
@@ -25,17 +22,10 @@ public class GraphAdjacencyList {
     private int[] finishTime;
     private int time;
 
-    public GraphAdjacencyList(Character[] vertices, String[] edges) {
-        mappingVertices = new LinkedList<>(List.of(vertices));
-        this.edges = new LinkedList<>(List.of(edges));
-        nVertices = mappingVertices.size();
-
-        adjacencyList = new LinkedList[nVertices];
-        for (int i = 0; i < nVertices; i++) {
-            adjacencyList[i] = new LinkedList<Integer>();
-        }
-
-        createConnections();
+    public GraphAdjacencyList(int nVertices) {
+        this.nVertices = nVertices;
+        this.mappingVertices = new LinkedList<>();
+        this.adjacencyList = new HashMap<>();
     }
 
     // deep-first-search
@@ -45,37 +35,24 @@ public class GraphAdjacencyList {
         discoveryTime = new int[nVertices];
         finishTime = new int[nVertices];
 
-        for (int i = 0; i < nVertices; i++) {
-            colors[i] = Color.WHITE;
-            predecessors[i] = null;
-            discoveryTime[i] = 0;
-            finishTime[i] = 0;
+        for (Character vertex : mappingVertices) {
+            int indexVertex = mappingVertices.indexOf(vertex);
+
+            colors[indexVertex] = Color.WHITE;
+            predecessors[indexVertex] = null;
+            discoveryTime[indexVertex] = 0;
+            finishTime[indexVertex] = 0;
         }
+
         time = 0;
-        for (int i = 0; i < nVertices; i++) {
-            if (colors[i] == Color.WHITE) {
-                dfsVisit(i);
+        for (Character vertex : mappingVertices) {
+            int indexVertex = mappingVertices.indexOf(vertex);
+
+            if (colors[indexVertex] == Color.WHITE) {
+                dfsVisit(indexVertex);
             }
         }
 
-        showDfsResult();
-    }
-
-    private void dfsVisit(int intVertex) {
-        discoveryTime[intVertex] = ++time;
-        colors[intVertex] = Color.GRAY;
-
-        for (Integer intAdjacencyVertex : adjacencyList[intVertex]) {
-            if (colors[intAdjacencyVertex] == Color.WHITE) {
-                predecessors[intAdjacencyVertex] = mappingVertices.get(intVertex);
-                dfsVisit(intAdjacencyVertex);
-            }
-        }
-        colors[intVertex] = Color.BLACK;
-        finishTime[intVertex] = ++time;
-    }
-
-    private void showDfsResult() {
         System.out.println("Deep-First-Search result:");
         System.out.println("Colors: " + Arrays.toString(colors));
         System.out.println("Predecessors: " + Arrays.toString(predecessors));
@@ -83,30 +60,41 @@ public class GraphAdjacencyList {
         System.out.println("Finish time: " + Arrays.toString(finishTime));
     }
 
-    public void add(char u, char v) {
-        adjacencyList[mappingVertices.indexOf(u)].add(mappingVertices.indexOf(v));
-        adjacencyList[mappingVertices.indexOf(v)].add(mappingVertices.indexOf(u));
+    private void dfsVisit(int indexVertex) {
+        discoveryTime[indexVertex] = ++time;
+        colors[indexVertex] = Color.GRAY;
+
+        for (Character adjacentVertex : adjacencyList.get(mappingVertices.get(indexVertex))) {
+            int indexAdjacentVertex = mappingVertices.indexOf(adjacentVertex);
+            if (colors[indexAdjacentVertex] == Color.WHITE) {
+                predecessors[indexAdjacentVertex] = mappingVertices.get(indexVertex);
+                dfsVisit(indexAdjacentVertex);
+            }
+        }
+        colors[indexVertex] = Color.BLACK;
+        finishTime[indexVertex] = ++time;
     }
 
-    private void createConnections() {
-        for (String edge : edges) {
-            char vertex1 = edge.charAt(0);
-            char vertex2 = edge.charAt(1);
+    public void addVertex(char vertex) {
+        adjacencyList.put(vertex, new LinkedList<>());
+        mappingVertices.add(vertex);
+    }
 
-            add(vertex1, vertex2);
-        }
+    public void addEdge(char u, char v) {
+        adjacencyList.get(u).add(v);
+        adjacencyList.get(v).add(u);
     }
 
     @Override
     public String toString() {
         StringBuilder graph = new StringBuilder();
 
-        for (int i = 0; i < nVertices; i++) {
-            graph.append(mappingVertices.get(i))
+        for (Map.Entry<Character, List<Character>> entry : adjacencyList.entrySet()) {
+            graph.append(entry.getKey())
                     .append(": ");
-            LinkedList<Integer> linkedList = adjacencyList[i];
-            for (Integer index : linkedList) {
-                graph.append(mappingVertices.get(index))
+            List<Character> list = entry.getValue();
+            for (Character vertex : list) {
+                graph.append(vertex)
                         .append(" ");
             }
             graph.append("\n");

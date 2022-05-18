@@ -2,28 +2,32 @@ package bfs_adjacency_matrix;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class GraphAdjacencyMatrix {
 
-    public enum Color {
+    private enum Color {
         WHITE,
         BLACK,
         GRAY
     }
 
+    public static class VertexNotFind extends Exception {
+        @Override
+        public String getMessage() {
+            return "Vertex not find!";
+        }
+    }
+
     private final LinkedList<Character> mappingVertices;
     private final int nVertices;
-    private final LinkedList<String> edges;
     private final int[][] adjacencyMatrix;
 
-    public GraphAdjacencyMatrix(Character[] vertices, String[] edges) {
-        mappingVertices = new LinkedList<>(List.of(vertices));
-        this.edges = new LinkedList<>(List.of(edges));
-        nVertices = mappingVertices.size();
+    public GraphAdjacencyMatrix(int nVertices) {
+        this.nVertices = nVertices;
+        this.mappingVertices = new LinkedList<>();
+        this.adjacencyMatrix = new int[nVertices][nVertices];
 
-        adjacencyMatrix = new int[nVertices][nVertices];
         for (int i = 0; i < nVertices; i++) {
             for (int j = 0; j < nVertices; j++) {
                 if (i == j) {
@@ -33,12 +37,14 @@ public class GraphAdjacencyMatrix {
                 }
             }
         }
-
-        createConnections();
     }
 
     // breadth-first-search
-    public void bfs(char originVertex) {
+    public void bfs(char originVertex) throws VertexNotFind {
+        if (!mappingVertices.contains(originVertex)) {
+            throw new VertexNotFind();
+        }
+
         Color[] colors = new Color[nVertices];
         int[] distances = new int[nVertices];
         Character[] predecessors = new Character[nVertices];
@@ -55,8 +61,8 @@ public class GraphAdjacencyMatrix {
 
         while (!queue.isEmpty()) {
             Character vertex = queue.poll();
+            int[] adjacent = adjacencyMatrix[mappingVertices.indexOf(vertex)];
             for (int intVertices = 0; intVertices < nVertices; intVertices++) {
-                int[] adjacent = adjacencyMatrix[mappingVertices.indexOf(vertex)];
                 if (adjacent[intVertices] == 1) { // getting the adjacency vertices
                     if (colors[intVertices] == Color.WHITE) {
                         colors[intVertices] = Color.GRAY;
@@ -69,28 +75,19 @@ public class GraphAdjacencyMatrix {
             colors[mappingVertices.indexOf(vertex)] = Color.BLACK;
         }
 
-        showBfsResult(colors, distances, predecessors);
-    }
-
-    private void showBfsResult(Color[] colors, int[] distances, Character[] predecessors) {
-        System.out.println("Breadth-First-Search result:");
+        System.out.println("\nBreadth-First-Search result:");
         System.out.println("Colors: " + Arrays.toString(colors));
         System.out.println("Distances: " + Arrays.toString(distances));
         System.out.println("Predecessors: " + Arrays.toString(predecessors));
     }
 
-    public void add(char u, char v) {
+    public void addEdge(char u, char v) {
         adjacencyMatrix[mappingVertices.indexOf(u)][mappingVertices.indexOf(v)] = 1;
         adjacencyMatrix[mappingVertices.indexOf(v)][mappingVertices.indexOf(u)] = 1;
     }
 
-    private void createConnections() {
-        for (String edge : edges) {
-            char vertex1 = edge.charAt(0);
-            char vertex2 = edge.charAt(1);
-
-            add(vertex1, vertex2);
-        }
+    public void addVertex(char vertex) {
+        mappingVertices.add(vertex);
     }
 
     @Override
