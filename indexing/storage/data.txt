@@ -1,45 +1,55 @@
-CODE=33
-TITLE=Livro 1
-AUTHOR=Pessoa 1
-YEAR=2020
-#
-CODE=21
-TITLE=Livro 2
-AUTHOR=Pessoa 2
-YEAR=2013
-#
-CODE=2
-TITLE=Livro 3
-AUTHOR=Pessoa 3
-YEAR=1999
-#
-CODE=47
-TITLE=Livro 4
-AUTHOR=Pessoa 4
-YEAR=2018
-#
-CODE=10
-TITLE=Livro 10
-AUTHOR=Pessoa 10
-YEAR=2010
-#
-CODE=87
-TITLE=C Completo
-AUTHOR=Tom
-YEAR=1999
+CODE=45
+TITLE=Algoritmos de Destruição em Massa
+AUTHOR=Cathy
+YEAR=2021
 #
 CODE=1
-TITLE=Os elementos
+TITLE=Os Elementos
 AUTHOR=Euclides
 YEAR=1
 #
-CODE=669
-TITLE=Programação Competitiva
-AUTHOR=John
-YEAR=2005
+CODE=33
+TITLE=C Completo e Total
+AUTHOR=Herbert
+YEAR=1987
 #
-CODE=73
-TITLE=Kotlin para Android
-AUTHOR=Google
-YEAR=2018
+CODE=66
+TITLE=Cálculo 1
+AUTHOR=Stewart
+YEAR=2013
+#
+CODE=89
+TITLE=Álgebra Linear
+AUTHOR=Boldrini
+YEAR=1984
+#
+CODE=21
+TITLE=Fundamentos da Matemáticos para Computação
+AUTHOR=Judith
+YEAR=1987
+#
+CODE=11
+TITLE=História da Matemática
+AUTHOR=Globo livros
+YEAR=2015
+#
+CODE=5
+TITLE=Python Data Science Handbook
+AUTHOR=Jake
+YEAR=2012
+#
+CODE=9
+TITLE=Machine Learning Yearning
+AUTHOR=Andrew Ng
+YEAR=2020
+#
+CODE=100
+TITLE=Mathematics for Marchine Learning
+AUTHOR=Marc
+YEAR=2010
+#
+CODE=3
+TITLE=Processamento de Imagens Digitais
+AUTHOR=Gonzalez
+YEAR=1999
 #
