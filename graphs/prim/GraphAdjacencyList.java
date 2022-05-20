@@ -85,9 +85,7 @@ public class GraphAdjacencyList {
         }
 
         while (!queue.isEmpty()) {
-            System.out.println(queue);
             PrimVertex vertex = queue.remove();
-            System.out.println(vertex);
             for (Node node : adjacencyList.get(vertex.representation)) {
                 PrimVertex adjacentVertex = primVertices.get(mappingVertices.indexOf(node.vertex));
                 if (queue.contains(adjacentVertex) && node.weight < adjacentVertex.key) {
