@@ -35,7 +35,7 @@ public class GraphAdjacencyMatrix {
         for (int i = 0; i < nVertices; i++) {
             for (int j = 0; j < nVertices; j++) {
                 if (i == j) {
-                    adjacencyMatrix[i][j] = 1; // TODO: para grafos ponderados, inicia a diagonal principal tudo 1?
+                    adjacencyMatrix[i][j] = 1; // if use Prim's algorithm set principal diagonal to 0
                 } else {
                     adjacencyMatrix[i][j] = 0;
                 }
